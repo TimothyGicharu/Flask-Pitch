@@ -1,9 +1,10 @@
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from flask_login import current_user
-from pitch.models import User
+from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
+from flask_login import login_user, current_user, logout_user, login_required
+from pitch import app, db, bcrypt
+from pitch.models import User, Post
+from pitch.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from pitch.users.utils import save_picture
+
 
 users = Blueprint('users', __name__)
 
