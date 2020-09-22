@@ -171,4 +171,4 @@ def user_pitch(username):
     pitches = Post.query.filter_by(author=user)\
         .order_by(Post.data_posted.desc())\
         .paginate(page=page,per_page=4)
-    return render_template('user_pitch.html', pitches=pitches, user=user)
+    return render_template('user_pitches.html', pitches=pitches, user=user)
