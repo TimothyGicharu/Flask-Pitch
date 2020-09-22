@@ -18,7 +18,7 @@ def new_pitch():
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     return render_template('create_pitch.html', title='New Pitch', form=form, legend='Create Pitch')
 
 
@@ -41,7 +41,7 @@ def update_pitch(post_id):
         pitch.category = form.category.data
         db.session.commit()
         flash('Your post has been updated!', 'success')
-        return redirect(url_for('pitch', post_id=pitch.id))
+        return redirect(url_for('pitches.pitch', post_id=pitch.id))
     elif request.method == 'GET':
         form.title.data = pitch.title
         form.content.data = pitch.content
@@ -59,4 +59,4 @@ def delete_pitch(post_id):
     db.session.delete(pitch)
     db.session.commit()
     flash('Pitch deleted', 'success')
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))

@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
-from pitch import app, db, bcrypt
+from pitch import db, bcrypt
 from pitch.models import User, Post
 from pitch.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from pitch.users.utils import save_picture
@@ -35,7 +35,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -44,7 +44,7 @@ def login():
 @users.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
 
 
 @users.route('/account', methods=['GET', 'POST'])
@@ -59,7 +59,7 @@ def account():
         current_user.email = form.email.data
         db.session.commit()
         flash('Your account has been updated', 'success')
-        return redirect(url_for('account'))
+        return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email

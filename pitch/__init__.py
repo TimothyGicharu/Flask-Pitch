@@ -2,21 +2,31 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from pitch.config import Config
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '08a505fc4b7dbb79a7bd93bccd526901'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://timothy:index506119056@localhost/minutepitch'
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+
+db = SQLAlchemy()
+bcrypt = Bcrypt()
+login_manager = LoginManager()
+login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 
-# Registering blueprints
-from pitch.users.routes import users
-from pitch.pitches.routes import pitches
-from pitch.main.routes import main
 
-app.register_blueprint(users)
-app.register_blueprint(pitches)
-app.register_blueprint(main)
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    db.init_app(app)
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+
+    # Registering blueprints
+    from pitch.users.routes import users
+    from pitch.pitches.routes import pitches
+    from pitch.main.routes import main
+
+    app.register_blueprint(users)
+    app.register_blueprint(pitches)
+    app.register_blueprint(main)
+
+    return app
