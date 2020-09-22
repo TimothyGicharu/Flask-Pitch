@@ -2,7 +2,7 @@
 
 {% block content%}
 
-    {% for pitch in pitches%}
+    {% for pitch in pitches.items %}
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + pitch.author.image_file)}}" alt="">
             <div class="media-body">
